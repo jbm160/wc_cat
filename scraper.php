@@ -7,13 +7,29 @@ require 'scraperwiki/simple_html_dom.php';
 
 //
 // // Read in a page
-
-$html = scraperwiki::scrape("http://72.21.92.20/category/wdc/woodcraft.aspx?sort=priceD");
+$baseurl="http://72.21.92.20";
+$html = scraperwiki::scrape($baseurl . "/category/wdc/woodcraft.aspx?sort=priceD");
 
 //
 // // Find something on the page using css selectors
 $dom = new simple_html_dom();
 $dom->load($html);
+
+// parse the categories and save to database
+// database columns:
+//   Category name
+//   path
+//   URL
+//   
+function getCategories($d){
+  foreach ($dom->find('div[class=S2refinementsContainer]')->children() as $div) {
+    $data = (
+      trim(strstr($div->children(1)->plaintext,"(",true)),
+      ,
+      $baseurl . $div->children(1)->href
+      );
+  }
+}
 // print_r($dom->find("table.list"));
 //
 // // Write out to the sqlite database using scraperwiki library
