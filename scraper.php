@@ -7,13 +7,14 @@ require 'scraperwiki/simple_html_dom.php';
 
 //
 // // Read in a page
-$baseurl="http://72.21.92.20";
+$baseurl="http://gp1.adn.edgecastcdn.net";
 $html = scraperwiki::scrape($baseurl . "/category/wdc/woodcraft.aspx?sort=priceD");
 
+getCategories($html);
 //
 // // Find something on the page using css selectors
-$dom = new simple_html_dom();
-$dom->load($html);
+// $dom = new simple_html_dom();
+// $dom->load($html);
 
 // parse the categories and save to database
 // database columns:
@@ -21,13 +22,24 @@ $dom->load($html);
 //   path
 //   URL
 //   
-function getCategories($d){
-  foreach ($dom->find('div[class=S2refinementsContainer]')->children() as $div) {
-    $data = (
-      trim(strstr($div->children(1)->plaintext,"(",true)),
-      ,
-      $baseurl . $div->children(1)->href
-      );
+function getCategories($u){
+  $d = new simple_html_dom();
+  $d->load(scraperwiki::scrape($u));
+  if ($d->find('div[id=ctl00_cphContent_gsaCatFacetContainer]')->find('div[class=S2refinementsContainer]')) {
+    $breadcrumb = $d->find('div[id=breadcrumb]');
+    foreach ($breadcrumb->children() as $crumb) {
+      $path .= trim($crumb->innertext) . "/";
+    }
+    $path .= trim(strrchr($breadcrumb->innertext,">"),"> ");
+    foreach ($d->find('div[id=ctl00_cphContent_gsaCatFacetContainer]')->find('div[class=S2refinementsContainer]')->children() as $div) {
+      $data = (
+        trim(strstr($div->children(1)->innertext,"(",true)),
+        $path,
+        $baseurl . $div->children(1)->href
+        );
+      scraperwiki::save_sqlite(array('Name', 'Path', 'URL'), $data, 'Categories');
+      getCategories($baseurl . $div->children(1)->href);
+    }
   }
 }
 // print_r($dom->find("table.list"));
