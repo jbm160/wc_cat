@@ -25,7 +25,7 @@ getCategories($html);
 function getCategories($u){
   $d = new simple_html_dom();
   $d->load(scraperwiki::scrape($u));
-  if ($d->find('div[id=ctl00_cphContent_gsaCatFacetContainer]')->find('div[class=S2refinementsContainer]')) {
+  if ($d->find('div[id=ctl00_cphContent_gsaCatFacetContainer]')) {
     $breadcrumb = $d->find('div[id=breadcrumb]');
     foreach ($breadcrumb->children() as $crumb) {
       $path .= trim($crumb->innertext) . "/";
