@@ -32,11 +32,7 @@ function getCategories($u){
     }
     $path .= trim(strrchr($breadcrumb->innertext,">"),"> ");
     foreach ($d->find('div[id=ctl00_cphContent_gsaCatFacetContainer]')->find('div[class=S2refinementsContainer]')->children() as $div) {
-      $data = (
-        trim(strstr($div->children(1)->innertext,"(",true)),
-        $path,
-        $baseurl . $div->children(1)->href
-        );
+      $data = (trim(strstr($div->children(1)->innertext,"(",true)), $path, $baseurl . $div->children(1)->href);
       scraperwiki::save_sqlite(array('Name', 'Path', 'URL'), $data, 'Categories');
       getCategories($baseurl . $div->children(1)->href);
     }
