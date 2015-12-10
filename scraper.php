@@ -8,7 +8,7 @@ require 'scraperwiki/simple_html_dom.php';
 //
 // // Read in a page
 $baseurl="http://gp1.adn.edgecastcdn.net";
-$html = scraperwiki::scrape($baseurl . "/category/wdc/woodcraft.aspx?sort=priceD");
+$html = $baseurl . "/category/wdc/woodcraft.aspx?sort=priceD";
 
 getCategories($html);
 //
