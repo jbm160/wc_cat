@@ -17,7 +17,7 @@ if ($local) {
 echo "Opening categories.csv for reading...\n";
 if (($f = fopen("./categories.csv", "r")) !== FALSE) {
   while (($data = fgetcsv($f)) !== FALSE) {
-    getProducts($data[0]);
+    getProducts($data[2]);
   }
   fclose($f);
 }
@@ -38,7 +38,8 @@ function getProducts($u){
 //echo "Loaded URL: " . $u . "\n";
   if ($S2Prod = count($d->find('span[class=S2Product]')) && $S2Prod > 0) {
   	foreach ($S2Prod as $p) {
-  		$sku = trim($p->find('div[class=S2ProductSku]',0)->innertext,"# ";
+echo $p . "\n";
+  		$sku = trim($p->find('div[class=S2ProductSku]',0)->innertext,"# ");
   		$prodname = trim($p->find('div[class=S2ProductName]',0)->first_child()->innertext);
   		$prodthumb = $p->find('class=S2ProductImg',0)->src;
   		$prodURL = $p->find('div[class=S2ProductName]',0)->first_child()->href;
