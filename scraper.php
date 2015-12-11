@@ -16,10 +16,6 @@ $baseurl="http://www.woodcraft.com";
 $html = $baseurl . "/category/wdc/woodcraft.aspx?sort=priceD";
 
 getCategories($html);
-//
-// // Find something on the page using css selectors
-// $dom = new simple_html_dom();
-// $dom->load($html);
 
 // parse the categories and save to database
 // database columns:
@@ -48,7 +44,7 @@ echo "Loaded URL: " . $u . "\n";
       $url = $baseurl . $div->children(0)->href;
       $data = array("Name"=>$name, "Path"=>$path, "URL"=>$url);
       echo $path . "/" . $name . "\n";
-      scraperwiki::save_sqlite(array("Name"), $data);
+      scraperwiki::save_sqlite(array("URL"), $data);
       getCategories($url);
     }
   }
