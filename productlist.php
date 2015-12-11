@@ -35,7 +35,7 @@ function getProducts($u){
   $path = "";
   $d = new simple_html_dom();
   $d->load(scraperwiki::scrape($u));
-echo "Loaded URL: " . $u . "\n";
+//echo "Loaded URL: " . $u . "\n";
   $S2Prod = $d->find('span[class=S2Product]');
   if (count($S2Prod) > 0) {
   	foreach ($S2Prod as $p) {
