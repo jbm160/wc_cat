@@ -39,12 +39,12 @@ function getProducts($u){
   $S2Prod = $d->find('span[class=S2Product]');
   if (count($S2Prod) > 0) {
   	foreach ($S2Prod as $p) {
-echo $p . "\n";
   		$sku = trim($p->find('div[class=S2ProductSku]',0)->innertext,"# ");
   		$prodname = trim($p->find('div[class=S2ProductName]',0)->first_child()->innertext);
   		$prodthumb = $p->find('img[class=S2ProductImg]',0)->src;
   		$prodURL = $p->find('div[class=S2ProductName]',0)->first_child()->href;
   		fputcsv($o,array($sku, $prodname, $prodthumb, $prodURL));
+echo $prodname . "\n";
   	}
   	if ($d->find('div[class=S2itemsPPText]',0)->last_child()->style == "display: inline") {
   		$newURL = $baseurl . $d->find('div[class=S2itemsPPText]',0)->last_child()->href;
