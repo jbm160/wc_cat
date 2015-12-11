@@ -33,6 +33,7 @@ fclose($o);
 function getProducts($u){
   global $baseurl, $o, $local;
   $path = "";
+  $S2Prod = 0;
   $d = new simple_html_dom();
   $d->load(scraperwiki::scrape($u));
 echo "Loaded URL: " . $u . "\n";
