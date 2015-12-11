@@ -2,8 +2,8 @@
 // This is a template for a PHP scraper on morph.io (https://morph.io)
 // including some code snippets below that you should find helpful
 
-require 'scraperwiki.php';
-require 'scraperwiki/simple_html_dom.php';
+require '../scraperwiki-php/scraperwiki.php';
+require '../scraperwiki-php/scraperwiki/simple_html_dom.php';
 
 //
 // // Read in a page
@@ -23,22 +23,28 @@ getCategories($html);
 //   URL
 //   
 function getCategories($u){
+  global $baseurl;
+  $path = "";
   $d = new simple_html_dom();
   $d->load(scraperwiki::scrape($u));
+echo "Loaded URL: " . $u . "\n";
   if ($d->find('div[id=ctl00_cphContent_gsaCatFacetContainer]')) {
-    $breadcrumb = $d->find('div[id=breadcrumb]');
-    foreach ($breadcrumb->children() as $crumb) {
-      $path .= trim($crumb->innertext) . "/";
+    $breadcrumb = $d->find('div[id=breadcrumb]',0);
+//foreach($breadcrumb as $b) {
+//echo "Breadcrumb = " . $b;}
+    if (!is_null($breadcrumb)) {
+	foreach ($breadcrumb->children() as $crumb) {
+       	  $path .= trim($crumb->innertext) . "/";
+    	}
+        $path .= trim(strrchr($breadcrumb->innertext,">"),"> ");
     }
-    $path .= trim(strrchr($breadcrumb->innertext,">"),"> ");
-    foreach ($d->find('div[id=ctl00_cphContent_gsaCatFacetContainer]')->find('div[class=S2refinementsContainer]')->children() as $div) {
-      $data = array(
-        trim(strstr($div->children(1)->innertext,"(",true)),
-        $path,
-        $baseurl . $div->children(1)->href
-        );
-      scraperwiki::save_sqlite(array('Name', 'Path', 'URL'), $data, 'Categories');
-      getCategories($baseurl . $div->children(1)->href);
+    foreach ($d->find('div[id=ctl00_cphContent_gsaCatFacetContainer]',0)->find('div[class=S2refinementsContainer]',0)->children() as $div) {
+      $name = trim(strstr($div->children(0)->innertext,"(",true));
+      $url = $baseurl . $div->children(0)->href;
+      $data = array($name, $path, $url);
+      echo $path . "/" . $name . "\n";
+//      scraperwiki::save_sqlite(array('Name', 'Path', 'URL'), $data, 'Categories');
+	getCategories($url);
     }
   }
 }
