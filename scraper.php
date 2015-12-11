@@ -46,9 +46,9 @@ echo "Loaded URL: " . $u . "\n";
     foreach ($d->find('div[id=ctl00_cphContent_gsaCatFacetContainer]',0)->find('div[class=S2refinementsContainer]',0)->children() as $div) {
       $name = trim(strstr($div->children(0)->innertext,"(",true));
       $url = $baseurl . $div->children(0)->href;
-      $data = array($name, $path, $url);
+      $data = array("Name"=>$name, "Path"=>$path, "URL"=>$url);
       echo $path . "/" . $name . "\n";
-      scraperwiki::save_sqlite(array('Name', 'Path', 'URL'), $data, 'Categories');
+      scraperwiki::save_sqlite(array("Name"), $data, "Categories");
       getCategories($url);
     }
   }
