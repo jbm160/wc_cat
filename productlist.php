@@ -35,42 +35,20 @@ function getProducts($u){
   $path = "";
   $d = new simple_html_dom();
   $d->load(scraperwiki::scrape($u));
-echo "Loaded URL: " . $u . "\n";
-  if ($d->find('div[id=ctl00_cphContent_gsaCatFacetContainer]')) {
-    $breadcrumb = $d->find('div[id=breadcrumb]',0);
-//foreach($breadcrumb as $b) {
-//echo "Breadcrumb = " . $b;}
-    if (!is_null($breadcrumb)) {
-	foreach ($breadcrumb->children() as $crumb) {
-       	  $path .= trim($crumb->innertext) . "/";
-    	}
-        $path .= trim(strrchr($breadcrumb->innertext,">"),"> ");
-    }
-    foreach ($d->find('div[id=ctl00_cphContent_gsaCatFacetContainer]',0)->find('div[class=S2refinementsContainer]',0)->children() as $div) {
-      $name = trim(strstr($div->children(0)->innertext,"(",true));
-      $url = $baseurl . $div->children(0)->href;
-      $data = array("Name"=>$name, "Path"=>$path, "URL"=>$url);
-      echo $path . "/" . $name . "\n";
-      if ($local) {
-      	fputcsv($f,array($name, $path, $url));
-      } else {
-      	scraperwiki::save_sqlite(array("URL"), $data);
-      }
-      getCategories($url);
-    }
+//echo "Loaded URL: " . $u . "\n";
+  if ($S2Prod = count($d->find('span[class=S2Product]')) && $S2Prod > 0) {
+  	foreach ($S2Prod as $p) {
+  		$sku = trim($p->find('div[class=S2ProductSku]',0)->innertext,"# ";
+  		$prodname = trim($p->find('div[class=S2ProductName]',0)->first_child()->innertext);
+  		$prodthumb = $p->find('class=S2ProductImg',0)->src;
+  		$prodURL = $p->find('div[class=S2ProductName]',0)->first_child()->href;
+  		fputcsv($o,array($sku, $prodname, $prodthumb, $prodURL));
+  	}
+  	if ($p->find('div[class=S2itemsPPText]',0)->last_child()->style == "display: inline") {
+  		$newURL = $baseurl . $p->find('div[class=S2itemsPPText]',0)->last_child()->href;
+  		getProducts($newURL);
+  	}
   }
 }
-// print_r($dom->find("table.list"));
-//
-// // Write out to the sqlite database using scraperwiki library
-// scraperwiki::save_sqlite(array('name'), array('name' => 'susan', 'occupation' => 'software developer'));
-//
-// // An arbitrary query against the database
-// scraperwiki::select("* from data where 'name'='peter'")
 
-// You don't have to do things with the ScraperWiki library.
-// You can use whatever libraries you want: https://morph.io/documentation/php
-// All that matters is that your final data is written to an SQLite database
-// called "data.sqlite" in the current working directory which has at least a table
-// called "data".
 ?>
