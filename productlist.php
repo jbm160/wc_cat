@@ -42,7 +42,7 @@ function getProducts($u){
 echo $p . "\n";
   		$sku = trim($p->find('div[class=S2ProductSku]',0)->innertext,"# ");
   		$prodname = trim($p->find('div[class=S2ProductName]',0)->first_child()->innertext);
-  		$prodthumb = $p->find('class=S2ProductImg',0)->src;
+  		$prodthumb = $p->find('img[class=S2ProductImg]',0)->src;
   		$prodURL = $p->find('div[class=S2ProductName]',0)->first_child()->href;
   		fputcsv($o,array($sku, $prodname, $prodthumb, $prodURL));
   	}
