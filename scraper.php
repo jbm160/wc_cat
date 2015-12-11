@@ -1,9 +1,14 @@
 <?php
 // This is a template for a PHP scraper on morph.io (https://morph.io)
 // including some code snippets below that you should find helpful
-
-require '../scraperwiki-php/scraperwiki.php';
-require '../scraperwiki-php/scraperwiki/simple_html_dom.php';
+$local = 0;
+if ($local) {
+  require '../scraperwiki-php/scraperwiki.php';
+  require '../scraperwiki-php/scraperwiki/simple_html_dom.php';
+} else {
+  require 'scraperwiki.php';
+  require 'scraperwiki/simple_html_dom.php';
+}
 
 //
 // // Read in a page
@@ -43,8 +48,8 @@ echo "Loaded URL: " . $u . "\n";
       $url = $baseurl . $div->children(0)->href;
       $data = array($name, $path, $url);
       echo $path . "/" . $name . "\n";
-//      scraperwiki::save_sqlite(array('Name', 'Path', 'URL'), $data, 'Categories');
-	getCategories($url);
+      scraperwiki::save_sqlite(array('Name', 'Path', 'URL'), $data, 'Categories');
+      getCategories($url);
     }
   }
 }
