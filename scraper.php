@@ -48,7 +48,7 @@ echo "Loaded URL: " . $u . "\n";
       $url = $baseurl . $div->children(0)->href;
       $data = array("Name"=>$name, "Path"=>$path, "URL"=>$url);
       echo $path . "/" . $name . "\n";
-      scraperwiki::save_sqlite(array("Name"), $data, "Categories");
+      scraperwiki::save_sqlite(array("Name"), $data);
       getCategories($url);
     }
   }
