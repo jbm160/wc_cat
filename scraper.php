@@ -13,9 +13,11 @@ if ($local) {
 //
 // // Read in a page
 $baseurl="http://www.woodcraft.com";
+$f = fopen("./categories.csv", "w+");
 $html = $baseurl . "/category/wdc/woodcraft.aspx?sort=priceD";
 
 getCategories($html);
+fclose($f);
 
 // parse the categories and save to database
 // database columns:
@@ -24,7 +26,7 @@ getCategories($html);
 //   URL
 //   
 function getCategories($u){
-  global $baseurl;
+  global $baseurl, $f;
   $path = "";
   $d = new simple_html_dom();
   $d->load(scraperwiki::scrape($u));
@@ -44,7 +46,11 @@ echo "Loaded URL: " . $u . "\n";
       $url = $baseurl . $div->children(0)->href;
       $data = array("Name"=>$name, "Path"=>$path, "URL"=>$url);
       echo $path . "/" . $name . "\n";
-      scraperwiki::save_sqlite(array("URL"), $data);
+      if ($local) {
+      	fputcsv($f,array($name, $path, $url));
+      } else {
+      	scraperwiki::save_sqlite(array("URL"), $data);
+      }
       getCategories($url);
     }
   }
