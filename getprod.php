@@ -21,7 +21,7 @@ $data = array(
   "has_options",
   "image",
   "manufacturer",
-  "meta_keyword"
+  "meta_keyword",
   "msrp_display_actual_price_type",
   "msrp_enabled",
   "name",
