@@ -256,7 +256,7 @@ function getProduct($u){
         $thumbs[$x]->first_child()->title,
         ($x + 2),
         0
-        )
+        );
       fputcsv($o,$data);
     }
   }
