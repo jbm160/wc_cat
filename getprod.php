@@ -179,6 +179,14 @@ function getProduct($u){
     $catname .= trim($cat->innertext) . "/";
   }
   $catname .= trim($d->find('div[id=breadcrumb] ul a b',0)->innertext);
+  if (!is_null($d->find('div[id=prospecsbox]',0))) {
+    $description = $d->find('div[id=prospecsbox]',0)->outertext;
+  } else {
+    $description = "";
+  }
+  if (!is_null($d->find('div[id=ctl00_cphContent_divShippingBilling]',0))) {
+    $description .= $d->find('div[id=ctl00_cphContent_divShippingBilling]',0)->outertext;
+  }
   $data = array(
     trim($d->find('span[id=pskuonly]',0)->innertext),
     "",
@@ -188,7 +196,7 @@ function getProduct($u){
     "Home",
     "base",
     "12/12/15 22:48",
-    $d->find('div[id=prospecsbox]',0)->outertext . $d->find('div[id=ctl00_cphContent_divShippingBilling]',0)->outertext,
+    $description,
     "No",
     0,
     $img, 
@@ -266,10 +274,10 @@ function getProduct($u){
       $data = array(
         trim($d->find('span[id=pskuonly]',0)->innertext),
         trim($rev->find('p.pr-review-rating-headline span',0)->innertext),
-        trim($rev->find('span."pr-rating pr-rounded"',0)->innertext),
+        trim($rev->find('span.pr-rating',0)->innertext),
         trim($rev->find('span[id=ctl00_cphContent_datalistReviews_ctl00_labelUser]',0)->innertext),
         trim($rev->find('span[id=ctl00_cphContent_datalistReviews_ctl00_labelLocation]',0)->innertext),
-        trim($rev->find('div."pr-review-author-date pr-rounded"',0)->innertext),
+        trim($rev->find('div.pr-review-author-date',0)->innertext),
         trim($rev->find('span[id=ctl00_cphContent_datalistReviews_ctl00_labelComments]',0)->innertext)
       );
       fputcsv($r,$data);
