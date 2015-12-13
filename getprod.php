@@ -4,8 +4,8 @@
 $local = 1;
 $baseurl = "http://www.woodcraft.com";
 $o = fopen("./detprodlist.csv", "w+");
-$r = fopen("./reviews.csv", "w+")
-$i = fopen("./images.csv", "w+")
+$r = fopen("./reviews.csv", "w+");
+$i = fopen("./images.csv", "w+");
 fputcsv($i,array("Original Image URL","New Image URL"));
 $data = array(
   "sku",
