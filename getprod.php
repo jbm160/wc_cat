@@ -169,7 +169,7 @@ function getProduct($u){
   $d = new simple_html_dom();
   $d->load(scraperwiki::scrape($u));
 //echo "Loaded URL: " . $u . "\n";
-  $imgfileurl = $d->find('div[id=medproimg]')->first_child()->href;
+  $imgfileurl = $d->find('div[id=medproimg]',0)->first_child()->href;
   $imgfile = trim(strrchr($imgfileurl,"/"),"/ ");
   $img = "/" . substr($imgfile,0,1) . "/" . substr($imgfile,1,1) . "/" . $imgfile;
   fputcsv($i,array($imgfileurl,$img));
@@ -233,7 +233,7 @@ function getProduct($u){
     0,
     88,
     $img,
-    $d->find('div[id=medproimg]')->first_child()->title,
+    $d->find('div[id=medproimg]',0)->first_child()->title,
     1,
     0    
     );
