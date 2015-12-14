@@ -87,7 +87,7 @@ if ($local) {
 //
 // // Read in a page
 echo "Opening prodlist.csv for reading...\n";
-if (($f = fopen("./prodlist.csv", "r")) !== FALSE) {
+if (($f = fopen("./uniqprod.csv", "r")) !== FALSE) {
   while (($data = fgetcsv($f)) !== FALSE) {
     $produrl = $baseurl . $data[3];
     getProduct($produrl);
