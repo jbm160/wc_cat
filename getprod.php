@@ -6,6 +6,7 @@ $baseurl = "http://www.woodcraft.com";
 $o = fopen("./detprodlist.csv", "w+");
 $r = fopen("./reviews.csv", "w+");
 $i = fopen("./images.csv", "w+");
+$e = fopen("./errors.csv", "a+");
 fputcsv($i,array("Original Image URL","New Image URL"));
 $data = array(
   "sku",
@@ -90,13 +91,16 @@ echo "Opening prodlist.csv for reading...\n";
 if (($f = fopen("./uniqprod.csv", "r")) !== FALSE) {
   while (($data = fgetcsv($f)) !== FALSE) {
     $produrl = $baseurl . $data[3];
-    getProduct($produrl);
+    if (!getProduct($produrl)) {
+      fputcsv($e,array($data[0],$data[1],$data[2],$data[3]));
+    }
   }
   fclose($f);
 }
 fclose($o);
 fclose($r);
 fclose($i);
+fclose($e);
 
 
 // parse the categories and save to database
@@ -168,6 +172,9 @@ function getProduct($u){
   $path = "";
   $d = new simple_html_dom();
   $d->load(scraperwiki::scrape($u));
+  if (is_null(d$->find('div[id=medproimg]',0))) {
+    return 0;
+  }
 //echo "Loaded URL: " . $u . "\n";
   $imgfileurl = $d->find('div[id=medproimg]',0)->first_child()->href;
   $imgfile = trim(strrchr($imgfileurl,"/"),"/ ");
@@ -289,6 +296,7 @@ function getProduct($u){
     }
   }
   echo trim($d->find('div[id=productname]',0)->first_child()->innertext) . "\n";
+  return 1;
 }
 
 ?>
