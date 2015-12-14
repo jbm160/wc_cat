@@ -187,6 +187,11 @@ function getProduct($u){
   if (!is_null($d->find('div[id=ctl00_cphContent_divShippingBilling]',0))) {
     $description .= $d->find('div[id=ctl00_cphContent_divShippingBilling]',0)->outertext;
   }
+  if (!is_null($d->find('span[id=ctl00_cphContent_hidebrandid]',0))) {
+    $brand = trim($d->find('span[id=ctl00_cphContent_hidebrandid]',0)->first_child()->innertext);
+  } else {
+    $brand = "";
+  }
   $data = array(
     trim($d->find('span[id=pskuonly]',0)->innertext),
     "",
@@ -199,8 +204,8 @@ function getProduct($u){
     $description,
     "No",
     0,
-    $img, 
-    trim($d->find('span[id=ctl00_cphContent_hidebrandid]',0)->first_child()->innertext),
+    $img,
+    $brand,
     "",
     "Use config",
     "Use config",
