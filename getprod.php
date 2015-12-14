@@ -172,7 +172,7 @@ function getProduct($u){
   $path = "";
   $d = new simple_html_dom();
   $d->load(scraperwiki::scrape($u));
-  if (is_null(d$->find('div[id=medproimg]',0))) {
+  if (is_null($d->find('div[id=medproimg]',0))) {
     return 0;
   }
 //echo "Loaded URL: " . $u . "\n";
