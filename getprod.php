@@ -275,10 +275,10 @@ function getProduct($u){
         trim($d->find('span[id=pskuonly]',0)->innertext),
         trim($rev->find('p.pr-review-rating-headline span',0)->innertext),
         trim($rev->find('span.pr-rating',0)->innertext),
-        trim($rev->find('span[id=ctl00_cphContent_datalistReviews_ctl00_labelUser]',0)->innertext),
-        trim($rev->find('span[id=ctl00_cphContent_datalistReviews_ctl00_labelLocation]',0)->innertext),
+        trim($rev->find('span[id$=labelUser]',0)->innertext),
+        trim($rev->find('span[id$=labelLocation]',0)->innertext),
         trim($rev->find('div.pr-review-author-date',0)->innertext),
-        trim($rev->find('span[id=ctl00_cphContent_datalistReviews_ctl00_labelComments]',0)->innertext)
+        trim($rev->find('span[id$=labelComments]',0)->innertext)
       );
       fputcsv($r,$data);
     }
