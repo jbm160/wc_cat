@@ -37,7 +37,9 @@ fclose($e);
 function checkData($da) {
   global $baseurl, $f, $o, $i, $e, $local;
   $d = new simple_html_dom();
-  $d->load(scraperwiki::scrape($baseurl . $da[28]));
+  $u = $baseurl . $da[28];
+  echo "URL: " . $u ."\n";
+  $d->load(scraperwiki::scrape($u));
   if (is_null($d->find('div[id=medproimg] a',0))) {
     $errstr = "Error: " . $da[0] . ". Couldn't find product page.\n";
     fwrite($e,$errstr);
@@ -62,7 +64,7 @@ function checkData($da) {
       }
     }
     if (!is_numeric($da[19])) {
-      $price = trim(strstr(strstr($d->find('div[id=proprice]',0)->innertext,"$"),"<",true),"$ ";
+      $price = implode(explode(","trim(strstr(strstr($d->find('div[id=proprice]',0)->innertext,"$"),"<",true),"$ ")));
       if (is_numeric($price)) {
         $da[19] = $price;
       } else {
