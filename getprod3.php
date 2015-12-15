@@ -19,7 +19,7 @@ if ($local) {
 //
 // // Read in a page
 echo "Opening prodlist.csv for reading...\n";
-if (($f = fopen("./detprodlistnew.csv", "r")) !== FALSE) {
+if (($f = fopen("./detprodlisttest.csv", "r")) !== FALSE) {
   // copy header line to new file
   $data = fgetcsv($f);
   fputcsv($o, $data);
