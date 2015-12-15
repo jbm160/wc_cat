@@ -18,7 +18,7 @@ if ($local) {
 
 //
 // // Read in a page
-echo "Opening prodlist.csv for reading...\n";
+echo "Opening detprodlistnew.csv for reading...\n";
 if (($f = fopen("./detprodlisttest.csv", "r")) !== FALSE) {
   // copy header line to new file
   $data = fgetcsv($f);
@@ -38,7 +38,7 @@ function checkData($da) {
   global $baseurl, $f, $o, $i, $e, $local;
   $d = new simple_html_dom();
   $u = $baseurl . $da[28];
-  echo "URL: " . $u ."\n";
+//  echo "URL: " . $u ."\n";
   $d->load(scraperwiki::scrape($u));
   if (is_null($d->find('div[id=medproimg] a',0))) {
     $errstr = "Error: " . $da[0] . ". Couldn't find product page.\n";
@@ -46,9 +46,9 @@ function checkData($da) {
     echo $errstr;
     return 0;
   }
+  $imgurl = trim($d->find('div[id=medproimg] a',0)->href);
   if ($da[11] == "///" || !is_numeric($da[19])) {
     if ($da[11] == "///") {
-      $imgurl = trim($d->find('div[id=medproimg] a',0)->href);
       $imgfile = trim(strrchr($imgurl,"/"),"/ ");
       $img = "/" . substr($imgfile,0,1) . "/" . substr($imgfile,1,1) . "/" . $imgfile;
       if ($img != "///") {
@@ -75,26 +75,41 @@ function checkData($da) {
       }
     }
     fputcsv($o,$da);
+    fputcsv($i,array($imgurl,$da[11]));
     $errstr = "Success: updated " . $da[0] . ".\n";
     fwrite($e,$errstr);
     echo $errstr;
     checkThumbs($d,$da);
   }
   fputcsv($o,$da);
+  fputcsv($i,array($imgurl,$da[11]));
   checkThumbs($d,$da);
 }
 
 // Check for multiple thumbnails
 function checkThumbs($doc,$dat) {
-  global $baseurl, $f, $o, $i, $e, $local;
+  global $f, $o, $i, $e, $local;
   $thumbs = $doc->find('div[id=altvidthmbs] div.thmbs');
-  echo "Found " . count($thumbs) . " thumbnails.\n";
   if (count($thumbs) > 1) {
+    $errstr = "Success: Found " . (count($thumbs) - 1) . " thumbnails for " . $dat[0] . ".\n";
     for ($x = 0; $x <= (count($thumbs) - 2); $x++) {
       $imgfileurl = $thumbs[$x]->first_child()->href;
       $imgfile = trim(strrchr($imgfileurl,"/"),"/ ");
       $img = "/" . substr($imgfile,0,1) . "/" . substr($imgfile,1,1) . "/" . $imgfile;
-      echo "Found thumbnail " . $img . "\n";
+      fputcsv($i,array($imgfileurl,$img));
+      $data = array(
+        "","","","","","","","","","",
+        "","","","","","","","","","",
+        "","","","","","","","","","",
+        "","","","","","","","","","",
+        "","","","","","","","","","",
+        "","88",
+        $img,
+        $thumbs[$x]->first_child()->title,
+        ($x + 2),
+        0
+        );
+      fputcsv($o,$data);
     }
   }
 }
