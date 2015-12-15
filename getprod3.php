@@ -64,7 +64,7 @@ function checkData($da) {
       }
     }
     if (!is_numeric($da[19])) {
-      $price = implode(explode(","trim(strstr(strstr($d->find('div[id=proprice]',0)->innertext,"$"),"<",true),"$ ")));
+      $price = implode(explode(",",trim(strstr(strstr($d->find('div[id=proprice]',0)->innertext,"$"),"<",true),"$ ")));
       if (is_numeric($price)) {
         $da[19] = $price;
       } else {
