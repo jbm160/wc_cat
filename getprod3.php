@@ -35,10 +35,67 @@ fclose($e);
 // parse the array of values and check for missing images, prices, and thumbs
 
 function checkData($da) {
-  if () {
+  global $baseurl, $f, $o, $i, $e, $local;
+  $d = new simple_html_dom();
+  $d->load(scraperwiki::scrape($baseurl . $da[28]));
+  if (is_null($d->find('div[id=medproimg] a',0))) {
+    $errstr = "Error: " . $da[0] . ". Couldn't find product page.\n";
+    fwrite($e,$errstr);
+    echo $errstr;
+    return 0;
   }
+  if ($da[11] == "///" || !is_numeric($da[19])) {
+    if ($da[11] == "///") {
+      $imgurl = trim($d->find('div[id=medproimg] a',0)->href);
+      $imgfile = trim(strrchr($imgurl,"/"),"/ ");
+      $img = "/" . substr($imgfile,0,1) . "/" . substr($imgfile,1,1) . "/" . $imgfile;
+      if ($img != "///") {
+        $da[11] = $img;
+        $da[22] = $img;
+        $da[25] = $img;
+        $da[52] = $img;
+      } else {
+        $errstr = "Error: " . $da[0] . ". Couldn't find img filename.\n";
+        fwrite($e,$errstr);
+        echo $errstr;
+        return 0;
+      }
+    }
+    if (!is_numeric($da[19])) {
+      $price = trim(strstr(strstr($d->find('div[id=proprice]',0)->innertext,"$"),"<",true),"$ ";
+      if (is_numeric($price)) {
+        $da[19] = $price;
+      } else {
+        $errstr = "Error: " . $da[0] . ". Couldn't find price.\n";
+        fwrite($e,$errstr);
+        echo $errstr;
+        return 0;
+      }
+    }
+    fputcsv($o,$da);
+    $errstr = "Success: updated " . $da[0] . ".\n";
+    fwrite($e,$errstr);
+    echo $errstr;
+    checkThumbs($d,$da);
+  }
+  fputcsv($o,$da);
+  checkThumbs($d,$da);
 }
 
+// Check for multiple thumbnails
+function checkThumbs($doc,$dat) {
+  global $baseurl, $f, $o, $i, $e, $local;
+  $thumbs = $doc->find('div[id=altvidthmbs] div.thmbs');
+  echo "Found " . count($thumbs) . " thumbnails.\n";
+  if (count($thumbs) > 1) {
+    for ($x = 0; $x <= (count($thumbs) - 2); $x++) {
+      $imgfileurl = $thumbs[$x]->first_child()->href;
+      $imgfile = trim(strrchr($imgfileurl,"/"),"/ ");
+      $img = "/" . substr($imgfile,0,1) . "/" . substr($imgfile,1,1) . "/" . $imgfile;
+      echo "Found thumbnail " . $img . "\n";
+    }
+  }
+}
 // parse the categories and save to database
 /** database columns:
 sku
