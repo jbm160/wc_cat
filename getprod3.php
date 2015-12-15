@@ -92,6 +92,8 @@ function checkThumbs($doc,$dat) {
   $thumbs = $doc->find('div[id=altvidthmbs] div.thmbs');
   if (count($thumbs) > 1) {
     $errstr = "Success: Found " . (count($thumbs) - 1) . " thumbnails for " . $dat[0] . ".\n";
+    fwrite($e,$errstr);
+    echo $errstr;
     for ($x = 0; $x <= (count($thumbs) - 2); $x++) {
       $imgfileurl = $thumbs[$x]->first_child()->href;
       $imgfile = trim(strrchr($imgfileurl,"/"),"/ ");
